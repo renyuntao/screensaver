@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Date: 2016-08-23
+# Function: Show Screensaver in Ubuntu Desktop 14.04 LTS
+# Prerequisite: 
+#	           1. cmatrix
+#	           2. cpulimit
+#	           3. xdotool
+# Maintainer: Yuntao Ren <rytubuntulinux@gmail.com>
+
+pid=`pidof cpulimit`
+color_array=(green red blue white yellow cyan magenta black)
+color_array_len=${#color_array[@]}
+index=`echo "$RANDOM % ${color_array_len}" | bc`
+
+# Get the path of `cmatrix`
+limit_program_path=`which cmatrix`
+
+# The program `cpulimit` is not running
+if [ "${pid}" == "" ]
+then
+	echo "Run cpulimit..."
+	cpulimit -l 5 -P ${limit_program_path} &
+	echo "cpulimit is running..."
+
+	# Show Screensaver
+	cmatrix -s -b -C ${color_array[${index}]}
+
+	# Lock the screen
+	xdotool key Ctrl+Alt+l
+# The program `cpulimit` is already running
+else
+	echo "cpulimit already running..."
+
+	# Show Screensaver
+	cmatrix -s -b -C ${color_array[${index}]}
+
+	# Lock the screen
+	xdotool key Ctrl+Alt+l
+fi
+
+exit 0
