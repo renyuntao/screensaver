@@ -5,7 +5,7 @@
 
 # Prerequisite
 
-You should install the following tool beforehand:      
+You should install the following tools beforehand:      
 	
 - **cmatrix**           
 - **cpulimit**          
