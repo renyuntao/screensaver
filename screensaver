@@ -34,7 +34,7 @@ then
 	cmatrix -s -b -C ${color_array[${index}]}
 
 	# Input the Secret Key
-	read -t ${timeout} -p ${prompt} var
+	read -s -t ${timeout} -p ${prompt} var
 
 	# Check if the `var` equal to `secret_key`
 	if [ "${var}" == "${secret_key}" ]
@@ -52,7 +52,7 @@ else
 	cmatrix -s -b -C ${color_array[${index}]}
 
 	# Input the Secret Key
-	read -t ${timeout} -p "${prompt}" var
+	read -s -t ${timeout} -p "${prompt}" var
 
 	# Check if the `var` equal to `secret_key`
 	if [ "${var}" == "${secret_key}" ]
