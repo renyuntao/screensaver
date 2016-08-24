@@ -12,6 +12,9 @@ color_array=(green red blue white yellow cyan magenta black)
 color_array_len=${#color_array[@]}
 index=`echo "$RANDOM % ${color_array_len}" | bc`
 
+limit_cpu=5
+secret_key="Geek"
+
 # Get the path of `cmatrix`
 limit_program_path=`which cmatrix`
 
@@ -19,14 +22,23 @@ limit_program_path=`which cmatrix`
 if [ "${pid}" == "" ]
 then
 	echo "Run cpulimit..."
-	cpulimit -l 5 -P ${limit_program_path} &
+	cpulimit -l ${limit_cpu} -P ${limit_program_path} &
 	echo "cpulimit is running..."
 
 	# Show Screensaver
 	cmatrix -s -b -C ${color_array[${index}]}
 
-	# Lock the screen
-	xdotool key Ctrl+Alt+l
+	# Input the Secret Key
+	read -t 3 -p "Please Input Secret Key: " var
+
+	# Check if the `var` equal to `secret_key`
+	if [ "${var}" == "${secret_key}" ]
+	then
+		exit 0
+	else
+		# Lock the screen
+		xdotool key Ctrl+Alt+l
+	fi
 # The program `cpulimit` is already running
 else
 	echo "cpulimit already running..."
@@ -34,8 +46,17 @@ else
 	# Show Screensaver
 	cmatrix -s -b -C ${color_array[${index}]}
 
-	# Lock the screen
-	xdotool key Ctrl+Alt+l
+	# Input the Secret Key
+	read -t 3 -p "Please Input Secret Key: " var
+
+	# Check if the `var` equal to `secret_key`
+	if [ "${var}" == "${secret_key}" ]
+	then
+		exit 0
+	else
+		# Lock the screen
+		xdotool key Ctrl+Alt+l
+	fi
 fi
 
 exit 0
