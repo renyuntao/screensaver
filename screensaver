@@ -13,11 +13,16 @@ color_array_len=${#color_array[@]}
 index=`echo "$RANDOM % ${color_array_len}" | bc`
 
 limit_cpu=5
-secret_key="Geek"
 
 # Used by `read`
 timeout=5
 prompt='Please Input the Secret Key: '
+
+# When you quit from the screensaver, you should input the 
+# correct value of secret_key(in this case, it's "Geek")
+# in ${timeout} seconds(in this case, it's 5 seconds), 
+# otherwise, the desktop will be locked.
+secret_key="Geek"
 
 
 # Get the path of `cmatrix`
@@ -34,7 +39,7 @@ then
 	cmatrix -s -b -C ${color_array[${index}]}
 
 	# Input the Secret Key
-	read -s -t ${timeout} -p ${prompt} var
+	read -s -t ${timeout} -p "${prompt}" var
 
 	# Check if the `var` equal to `secret_key`
 	if [ "${var}" == "${secret_key}" ]
