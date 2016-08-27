@@ -9,10 +9,17 @@
 
 
 # When you quit from the screensaver, you should input the 
+# correct value of secret_key in ${timeout} seconds;
+# otherwise, the desktop will be locked.
+#
+# Read secret key from the file 'screensaver_key'
+read -r secret_key < screensaver_key
+
+# When you quit from the screensaver, you should input the 
 # correct value of secret_key(in this case, it's "Geek")
 # in ${timeout} seconds(in this case, it's 5 seconds), 
 # otherwise, the desktop will be locked.
-secret_key="Geek"
+#secret_key="Geek"
 
 # Show Help
 function show_help
@@ -48,6 +55,46 @@ do
 		# Change the secret key
 		c)
 			echo "c option is triggered"
+			echo -ne "\e[34mInput the password: \e[0m"
+			read -rs passwd
+			echo "passwd: $passwd"
+			echo "${passwd}" | sudo -kS ls &> /dev/null
+
+			# The password user input is correct 
+			if [ "$?" == "0" ]
+			then
+				echo -ne "Input the old secret key: "
+				read -sr old_secret_key
+				echo ""
+
+				if [ "${old_secret_key}" != "${secret_key}" ] 
+				then
+					echo "Incorrect old secret key!"
+					exit 0
+				fi
+
+				echo -ne "Input the new password: "
+				read -sr new_passwd
+				echo ""
+				echo -ne "Repeat password: "
+				read -sr repeat_new_passwd
+				echo ""
+
+				if [ "$new_passwd" == "$repeat_new_passwd" ]
+				then
+					echo "${new_passwd}" > screensaver_key
+					echo -e "\e[34mThe secret key has changed successfully!\e[0m"
+					exit 0
+				else
+					echo -e "\e[31mThe two secret key don't match!\e[0m"
+					exit 0
+				fi
+			# The password user input is incorrect
+			else
+				echo -e "\n\e[31mIncorrect password!\e[0m"
+				exit 1
+			fi
+
 			;;
 		# Show help
 		h)
