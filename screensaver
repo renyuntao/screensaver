@@ -7,22 +7,97 @@
 #	           3. xdotool
 # Maintainer: Yuntao Ren <rytubuntulinux@gmail.com>
 
-pid=`pidof cpulimit`
-color_array=(green red blue white yellow cyan magenta black)
-color_array_len=${#color_array[@]}
-index=`echo "$RANDOM % ${color_array_len}" | bc`
-
-limit_cpu=5
-
-# Used by `read`
-timeout=5
-prompt='Please Input the Secret Key: '
 
 # When you quit from the screensaver, you should input the 
 # correct value of secret_key(in this case, it's "Geek")
 # in ${timeout} seconds(in this case, it's 5 seconds), 
 # otherwise, the desktop will be locked.
 secret_key="Geek"
+
+# Show Help
+function show_help
+{
+	echo ""
+	echo -e "\e[1m*************************** Help ********************************\e[0m"
+	echo ""
+	echo -e "\e[1mNAME\e[0m"
+	echo -e "    screensaver - Show Screensaver in Ubuntu Desktop 14.04 LTS"
+	echo ""
+	echo -e "\e[1mSYNOPSIS\e[0m"
+	echo -e "    \e[1mscreensaver\e[0m [\e[1m-h\e[0m] [\e[1m-c\e[0m] [\e[1m-s\e[0m]"
+	echo ""
+	echo -e "\e[1mOPTIONS\e[0m"
+	echo ""
+	echo -e "  \e[1m-c\e[0m"
+	echo "     Change the secret key"
+	echo ""
+	echo -e "  \e[1m-h\e[0m"
+	echo "     Show this help and exit"
+	echo ""
+	echo -e "  \e[1m-s\e[0m"
+	echo "     Show the secret key and exit"
+	echo ""
+	echo -e "\e[1m*****************************************************************\e[0m"
+	echo ""
+}
+
+# Parsing arguments with `getopts`
+while getopts "chs" opt
+do
+	case $opt in
+		# Change the secret key
+		c)
+			echo "c option is triggered"
+			;;
+		# Show help
+		h)
+			echo "h option is triggered"
+			show_help
+			exit 0
+			;;
+		# Show secret key
+		s)
+			echo "s option is triggerd"
+			echo -ne "\e[34mInput the password: \e[0m"
+			read -s passwd
+			echo ${passwd} | sudo -Sk ls &> /dev/null
+
+			# The password user input is correct
+			if [ "$?" == "0" ]
+			then
+				echo -e "\n\e[34mSecret Key:\e[0m \e[1m$secret_key\e[0m"
+				exit 0
+			# The password user input is incorrect
+			else
+				echo -e "\n\e[31mIncorrect password!\e[0m"
+				exit 1
+			fi
+			;;
+		\?)
+			;;
+	esac
+done
+
+#show_help
+exit
+
+# Get pid of `cpulimit`
+pid=`pidof cpulimit`
+
+# limit cpu usage, percentage of CPU allowed(Useed by `cpulimit`)
+limit_cpu=5
+
+# Store the color of screensaver in array `color_array`
+# and get the length of array `color_array`
+color_array=(green red blue white yellow cyan magenta black)
+color_array_len=${#color_array[@]}
+
+# Generate Random Number in Range [1,${color_array_len})
+index=`echo "$RANDOM % ${color_array_len}" | bc`
+
+# Used by `read`
+timeout=5
+prompt='Please Input the Secret Key: '
 
 
 # Get the path of `cmatrix`
