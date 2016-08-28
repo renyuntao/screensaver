@@ -7,6 +7,8 @@
 #	           3. xdotool
 # Maintainer: Yuntao Ren <rytubuntulinux@gmail.com>
 
+# The path of screensaver configure file
+config_file="./screensaver.conf"
 
 # When you quit from the screensaver, you should input the 
 # correct value of secret_key in ${timeout} seconds;
@@ -25,7 +27,7 @@ do
 
 	let '++counter'
 
-done < "screensaver_config"
+done < "$config_file_path"
 
 # Get pid of `cpulimit`
 pid=`pidof cpulimit`
@@ -72,6 +74,11 @@ function show_help
 	echo ""
 	echo -e "  \e[1m-s\e[0m"
 	echo "     Show the secret key and timeout, then exit"
+	echo ""
+	echo -e "  \e[1m-t\e[0m \e[3m\e[4mtimeout\e[0m"
+	echo -e "     When you quit from screensaver, you must input the correct"
+	echo -e "     Secret Key in \e[3m\e[4mtimeout\e[0m second(s); otherwise, the desktop"
+	echo -e "     will be locked"
 	echo ""
 	echo -e "\e[1m*****************************************************************\e[0m"
 	echo ""
