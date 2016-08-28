@@ -3,6 +3,30 @@
 
 ------------
 
+# SYNOPSIS
+
+**screensaver** [**-h**] [**-c**] [**-s**] [**-t** _timeout_]
+
+-----------------------------
+
+# OPTIONS
+
+**-c**        
+     &nbsp;&nbsp;&nbsp;&nbsp;Change the secret key
+
+**-h**             
+     &nbsp;&nbsp;&nbsp;&nbsp;Show this help and exit
+
+**-s**            
+     &nbsp;&nbsp;&nbsp;&nbsp;Show the secret key and timeout, then exit
+
+**-t** _timeout_               
+     &nbsp;&nbsp;&nbsp;&nbsp;When you quit from screensaver, you must input the correct         
+     &nbsp;&nbsp;&nbsp;&nbsp;Secret Key in _timeout_ second(s); otherwise, the desktop        
+     &nbsp;&nbsp;&nbsp;&nbsp;will be locked           
+
+-----------------------------
+
 # Prerequisite
 
 You should install the following tools beforehand:      
@@ -36,22 +60,16 @@ $ sudo apt-get install xdotool
 
 -----------------------------
 
-## Usage
+# Usage
 
-Give the executable permission to file `screensaver`:       
+1. Run the following command to configure `screensaver`:          
 
-```bash
-$ sudo chmod u+x screensaver
-```
+	```bash
+	$ make
+	```
+2. Run the `screensaver`:        
+	
+	```bash
+	$ screensaver
+	```
 
-Copy the file `screensaver` to directory `/usr/bin/`:       
-
-```bash
-$ sudo cp -v screensaver /usr/bin/
-```
-
-Then run the following command to show the screensaver:      
-
-```bash
-$ screensaver
-```
