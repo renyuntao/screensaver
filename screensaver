@@ -8,7 +8,7 @@
 # Maintainer: Yuntao Ren <rytubuntulinux@gmail.com>
 
 # The path of screensaver configure file
-config_file="./screensaver.conf"
+config_file="/etc/screensaver.conf"
 
 # When you quit from the screensaver, you should input the 
 # correct value of secret_key in ${timeout} seconds;
@@ -27,7 +27,8 @@ do
 
 	let '++counter'
 
-done < "$config_file_path"
+done < "$config_file"
+
 
 # Get pid of `cpulimit`
 pid=`pidof cpulimit`
@@ -62,7 +63,7 @@ function show_help
 	echo -e "    screensaver - Show Screensaver in Ubuntu Desktop 14.04 LTS"
 	echo ""
 	echo -e "\e[1mSYNOPSIS\e[0m"
-	echo -e "    \e[1mscreensaver\e[0m [\e[1m-h\e[0m] [\e[1m-c\e[0m] [\e[1m-s\e[0m]"
+	echo -e "    \e[1mscreensaver\e[0m [\e[1m-h\e[0m] [\e[1m-c\e[0m] [\e[1m-s\e[0m] [\e[1m-t\e[0m \e[3m\e[4mtimeout\e[0m]"
 	echo ""
 	echo -e "\e[1mOPTIONS\e[0m"
 	echo ""
@@ -85,8 +86,14 @@ function show_help
 }
 
 # Parsing arguments with `getopts`
-while getopts "chs" opt
+while getopts ":chst:" opt
 do
+	if [ "$?" != "0" ]
+	then
+		echo "getopts error...\n"
+		exit 1
+	fi
+
 	case $opt in
 		# Change the secret key
 		c)
@@ -100,34 +107,34 @@ do
 			then
 				echo ""
 				# Input the new Secret Key
-				echo -ne "\e[1m\e[34mInput the new secret key: "
+				echo -ne "\e[1m\e[34mInput the new secret key: \e[0m"
 				read -sr new_passwd
 				echo ""
-				echo -ne "\e[1m\e[34mRepeat the new secret key: "
+				echo -ne "\e[1m\e[34mRepeat the new secret key: \e[0m"
 				read -sr repeat_new_passwd
 				echo ""
 
 				# Check if the two secret keys are equal
 				if [ "$new_passwd" == "$repeat_new_passwd" ]
 				then
-					echo "${new_passwd}" > screensaver_config
-					echo "${timeout}" >> screensaver_config
-					echo -e "\e[95mThe secret key has changed successfully!\e[0m"
+					echo "${new_passwd}" > "$config_file"
+					echo "${timeout}" >> "$config_file"
+					echo -e "\e[1m\e[95mThe secret key has changed successfully!\e[0m"
 					exit 0
 				else
-					echo -e "\e[31mThe two secret keys don't match!\e[0m"
+					echo -e "Error: $0: \e[1m\e[31mThe two secret keys don't match!\e[0m"
 					exit 0
 				fi
 			# The password user input is incorrect
 			else
-				echo -e "\n\e[1m\e[31mIncorrect password!\e[0m"
+				echo -e "\nError: $0: \e[1m\e[31mIncorrect password!\e[0m"
 				exit 1
 			fi
 
 			;;
 		# Show help
 		h)
-			echo "h option is triggered"
+			clear
 			show_help
 			exit 0
 			;;
@@ -146,15 +153,45 @@ do
 				exit 0
 			# The password user input is incorrect
 			else
-				echo -e "\n\e[1m\e[31mIncorrect password!\e[0m"
+				echo -e "\nError: $0: \e[1m\e[31mIncorrect password!\e[0m"
 				exit 1
 			fi
 			;;
+		# Set timeout
+		t)
+			echo -e "\e[1m\e[96mSet the timeout...\e[0m"
+			new_timeout=$OPTARG
+
+			echo -ne "\e[1m\e[34mInput the password:\e[0m"
+			read -s passwd
+			echo ""
+
+			echo "$passwd" | sudo -kS ls &> /dev/null
+			if [ "$?" == "0" ]
+			then
+				timeout=$new_timeout
+				echo "$secret_key" > "$config_file"
+				echo "$timeout" >> "$config_file"
+				echo -e "\e[1m\e[95mThe timeout has changed successfully!\e[0m"
+				exit 0
+			else
+				echo -e "Error: $0: \e[1m\e[31mThe password you input is incorrect!\e[0m"
+				exit 1
+			fi
+			;;
+		# Missing the parameter
+		:)
+			echo -e "Error: $0: \e[1m\e[31m-$OPTARG option need a parameter\e[0m"
+			exit 1
+			;;
+		# Unrecognized option
 		\?)
+			echo -e "Error: $0: \e[1m\e[31mUnrecognized option -$OPTARG\e[0m"
+			exit 1
 			;;
 	esac
-done
 
+done
 
 
 # Get the path of `cmatrix`
