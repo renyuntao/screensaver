@@ -26,8 +26,8 @@
 
 **-t** _timeout_               
      &nbsp;&nbsp;&nbsp;&nbsp;When you quit from screensaver, you must input the correct         
-     &nbsp;&nbsp;&nbsp;&nbsp;Secret Key in _timeout_ second(s); otherwise, the desktop        
-     &nbsp;&nbsp;&nbsp;&nbsp;will be locked           
+     &nbsp;&nbsp;&nbsp;&nbsp;**Secret Key**(which you can see by run command `$ screensaver -s`)           
+	 &nbsp;&nbsp;&nbsp;&nbsp;in _**timeout**_ second(s); otherwise, the desktop will be locked                   
 
 -----------------------------
 
@@ -78,4 +78,4 @@ $ sudo apt-get install xdotool
 	```
 3. Quit from the screensave              
 
-	You can press any key to quit from the screensave, then you should input the **Secret Key**(which you can see by run the the command `$ screensaver -s`) in 7 seconds; otherwise, the Ubuntu Desktop will be locked.       
+	You can press any key to quit from the screensave, then you should input the _**Secret Key**_(which you can see by run the the command `$ screensaver -s`) in _**timeout**_(which you can also see by run the command `$ screensaver -s`) second(s); otherwise, the Ubuntu Desktop will be locked.       
