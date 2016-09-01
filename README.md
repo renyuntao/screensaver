@@ -72,4 +72,6 @@ $ sudo apt-get install xdotool
 	```bash
 	$ screensaver
 	```
+3. Quit from the screensave              
 
+	You can press any key to quit from the screensave, then you should input the **Secret Key**(which you can see by run the the command `$ screensaver -s`) in 7 seconds; otherwise, the Ubuntu Desktop will be locked.       
