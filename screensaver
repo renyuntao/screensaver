@@ -85,6 +85,10 @@ function show_help
 	echo ""
 }
 
+
+# Ignore Ctrl-C and Ctrl-Z
+trap '' SIGINT SIGTSTP
+
 # Parsing arguments with `getopts`
 while getopts ":chst:" opt
 do
