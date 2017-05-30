@@ -3,7 +3,7 @@
 -----------------------------
 
 # NAME
-**screensaver** - Show Screensaver in Ubuntu Desktop 14.04 LTS
+**screensaver** - Show Screensaver in Ubuntu Desktop 14.04, Ubuntu Desktop 16.04, etc.   
 
 ------------
 
