@@ -231,6 +231,7 @@ else
 	# Check if the `var` equal to `secret_key`
 	if [ "${var}" == "${secret_key}" ]
 	then
+		echo 
 		exit 0
 	else
 		# Lock the screen
