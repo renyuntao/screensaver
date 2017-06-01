@@ -1,0 +1,50 @@
+#!/bin/bash
+# Date:
+# 	2017-06-01
+# Usage:
+#   $0 [timeout] [tmpFile]
+# 	This script will be called by `screensaver`
+# Function:
+# 	If `screensaver` be killed by close the terminal window,
+#	this script can still run to lock the screen.
+# Maintainer:
+# 	Yuntao Ren <rytubuntulinux@gmail.com>
+
+if [ $# -ne 2 ]
+then
+	echo "argument error"
+	exit 1
+fi
+
+# Ignore singal SIGINT, SIGTSTP and SIGKILL
+trap '' SIGINT SIGTSTP SIGKILL
+
+timeout=$1
+tmpFile=$2
+let 'timeout += 2'
+
+sleep 1
+
+while [ 1 ]
+do
+	count=`ps -ef | grep  ' [c]matrix' | wc -l`
+	if [ "$count" == "0" ]
+	then
+		break
+	fi
+	sleep 1
+done
+
+sleep $timeout
+
+if [ -e $tmpFile ]
+then
+	rm $tmpFile
+
+	count=`ps -ef | grep  ' [c]matrix' | wc -l`
+	if [ "$count" == "0" ]
+	then
+		# Lock the screen
+		xdotool key Ctrl+Alt+l
+	fi
+fi
