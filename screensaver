@@ -7,6 +7,16 @@
 #	           3. xdotool
 # Maintainer: Yuntao Ren <rytubuntulinux@gmail.com>
 
+# Ignore Ctrl-C and Ctrl-Z
+trap '' SIGINT SIGTSTP SIGKILL
+
+# Entered full-screen display in the terminal
+lines1=`tput lines` &&  xdotool key F11 && sleep 1 && lines2=`tput lines`
+if [ $lines1 -gt $lines2 ]
+then
+	xdotool key F11
+fi
+
 # The path of screensaver configure file
 config_file="/etc/screensaver.conf"
 
@@ -85,9 +95,6 @@ function show_help
 	echo ""
 }
 
-
-# Ignore Ctrl-C and Ctrl-Z
-trap '' SIGINT SIGTSTP
 
 # Parsing arguments with `getopts`
 while getopts ":chst:" opt
@@ -201,6 +208,10 @@ done
 # Get the path of `cmatrix`
 limit_program_path=`which cmatrix`
 
+tmpFile="/tmp/screensaver.tmp"
+avoidKill='/usr/local/bin/avoidKill'
+
+
 # The program `cpulimit` is not running
 if [ "${pid}" == "" ]
 then
@@ -208,8 +219,12 @@ then
 	cpulimit -l ${limit_cpu} -P ${limit_program_path} &
 	echo "cpulimit is running..."
 
+	touch $tmpFile
+
 	# Show Screensaver
 	cmatrix -s -b -C ${color_array[${index}]}
+
+	nohup $avoidKill $timeout $tmpFile &> /dev/null &
 
 	# Input the Secret Key
 	read -s -t ${timeout} -p "${prompt}" var
@@ -217,6 +232,7 @@ then
 	# Check if the `var` equal to `secret_key`
 	if [ "${var}" == "${secret_key}" ]
 	then
+		rm -f $tmpFile
 		exit 0
 	else
 		# Lock the screen
@@ -226,8 +242,12 @@ then
 else
 	echo "cpulimit already running..."
 
+	touch $tmpFile
+
 	# Show Screensaver
 	cmatrix -s -b -C ${color_array[${index}]}
+
+	nohup $avoidKill $timeout $tmpFile &> /dev/null &
 
 	# Input the Secret Key
 	read -s -t ${timeout} -p "${prompt}" var
@@ -235,6 +255,7 @@ else
 	# Check if the `var` equal to `secret_key`
 	if [ "${var}" == "${secret_key}" ]
 	then
+		rm -f $tmpFile
 		echo 
 		exit 0
 	else

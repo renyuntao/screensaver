@@ -39,27 +39,42 @@ You should install the following tools beforehand:
 - **cpulimit**          
 - **xdotool**             
 
-## Install 
+```bash
+$ sudo apt-get update
+$ sudo apt-get install cmatrix cpulimit xdotool
+```
 
-### Install cmatrix
+-----------------------------
+
+# Install 
+
+## Install cmatrix
 
 ```bash
 $ sudo apt-get update
 $ sudo apt-get install cmatrix
 ```
 
-### Install cpulimit
+## Install cpulimit
 
 ```bash
 $ sudo apt-get update
 $ sudo apt-get install cpulimit
 ```
 
-### Install xdotool
+## Install xdotool
 
 ```bash
 $ sudo apt-get update
 $ sudo apt-get install xdotool
+```
+
+-----------------------------
+
+# Uninstall   
+
+```bash
+$ make uninstall
 ```
 
 -----------------------------
